@@ -42,7 +42,7 @@ export default function ({ navigation }) {
 
             } else {
               storeData('user', res.data);
-              navigation.replace('Home');
+              navigation.replace('SInput');
             }
           });
       }, 1200);
