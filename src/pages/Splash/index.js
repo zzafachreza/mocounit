@@ -9,8 +9,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import { colors, fonts, windowHeight, windowWidth } from '../../utils';
-import { getData } from '../../utils/localStorage';
-
+import { apiURL, getData } from '../../utils/localStorage';
+import axios from 'axios';
 export default function Splash({ navigation }) {
   const top = new Animated.Value(0.3);
 
@@ -19,10 +19,38 @@ export default function Splash({ navigation }) {
 
 
 
+    const unsubscribe = getData('user').then(res => {
+      // console.log(res);
+      if (!res) {
+        // console.log('beum login');
 
-    setTimeout(() => {
-      navigation.replace('Register');
-    }, 1500);
+        setTimeout(() => {
+          navigation.replace('Login');
+        }, 1500);
+      } else {
+
+
+        axios.post(apiURL + 'cek.php', {
+          fid_user: res.id
+        }).then(x => {
+          console.warn(x.data);
+
+          if (x.data == 404) {
+            console.log('update status');
+            setTimeout(() => {
+              navigation.replace('Home');
+            }, 1500);
+          } else {
+            console.log('new input');
+            setTimeout(() => {
+              navigation.replace('SInput');
+            }, 1500);
+          }
+        })
+
+
+      }
+    });
 
   }, []);
 

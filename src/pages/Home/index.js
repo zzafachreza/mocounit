@@ -13,7 +13,24 @@ import axios from 'axios';
 
 export default function Home({ navigation, route }) {
 
-  const item = route.params;
+
+  const [item, setItem] = useState({})
+
+
+  useEffect(() => {
+
+    getData('user').then(u => {
+      axios.post(apiURL + 'get_last.php', {
+        fid_user: u.id
+      }).then(res => {
+        console.warn('get last', res.data)
+        setItem(res.data)
+      })
+    })
+
+
+  }, [])
+
   return (
     <ImageBackground source={require('../../assets/back.png')}
       style={{

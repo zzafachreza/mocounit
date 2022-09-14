@@ -6,6 +6,7 @@ import SCek from './SCek';
 import SPenyakit from './SPenyakit';
 import STentang from './STentang';
 import SHasil from './SHasil';
+import SInput from './SInput';
 
 
 
@@ -27,4 +28,5 @@ export {
   Login,
   SHasil,
   Register,
+  SInput
 };

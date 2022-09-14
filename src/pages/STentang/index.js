@@ -7,7 +7,7 @@ export default function STentang({ navigation }) {
 
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('Register')
+            navigation.replace('SInput')
         }, 1200)
     }, [])
 

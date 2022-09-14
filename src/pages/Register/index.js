@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -11,86 +11,212 @@ import {
     Switch,
     SafeAreaView,
     ActivityIndicator,
-    TouchableOpacity,
-    FlatList,
-    Alert,
+
 } from 'react-native';
 import { colors } from '../../utils/colors';
-import { fonts, windowHeight } from '../../utils/fonts';
+import { fonts } from '../../utils/fonts';
 import { MyInput, MyGap, MyButton, MyPicker } from '../../components';
 import axios from 'axios';
 import { showMessage } from 'react-native-flash-message';
 import { apiURL } from '../../utils/localStorage';
 
 export default function Register({ navigation }) {
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
+    const [loading, setLoading] = useState(false);
+    const [valid, setValid] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+    const validate = text => {
+        // console.log(text);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(text) === false) {
+            // console.log('nama_lengkap is Not Correct');
+            setData({ ...data, nama_lengkap: text });
+            setValid(false);
+            return false;
+        } else {
+            setData({ ...data, nama_lengkap: text });
+            setValid(true);
+            // console.log('nama_lengkap is Correct');
+        }
+    };
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({
+        password: '',
+        username: '',
+        nama_lengkap: '',
+        telepon: '',
+        alamat: ''
+    });
 
-    const __renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity onPress={() => {
+    const simpan = () => {
+        if (
+            data.username.length === 0 &&
+            data.nama_lengkap.length === 0 &&
+            data.telepon.length === 0 &&
+            data.alamat.length === 0 &&
+            data.username.length === 0 &&
+            data.password.length === 0
 
+        ) {
+            showMessage({
+                message: 'Maaf Semua Field Harus Di isi !',
+            });
+        } else if (data.username.length === 0) {
+            showMessage({
+                message: 'Maaf username masih kosong !',
+            });
+        }
+        else if (data.nama_lengkap.length === 0) {
+            showMessage({
+                message: 'Maaf nama lengkap masih kosong !',
+            });
+        } else if (data.password.length === 0) {
+            showMessage({
+                message: 'Maaf Password masih kosong !',
+            });
+        } else {
+            setLoading(true);
+            console.log(data);
+            axios
+                .post(apiURL + 'register.php', data)
+                .then(res => {
+                    console.warn(res.data);
+                    let err = res.data.split('#');
 
-                if (item.id == 3) {
-                    navigation.navigate('Login', item)
-                } else {
-
-                    Alert.alert('MOCO U', 'Silahkan melakukan aktivasi terlebih dahulu untuk menggunakan fitur ini')
-                }
-            }} style={{
-                flex: 1,
-                backgroundColor: colors.white,
-                margin: 10,
-
-            }}>
-                <Image style={{
-                    width: '100%',
-                    height: 150,
-                }} source={{
-                    uri: item.image
-                }} />
-                <Text style={{
-                    textAlign: 'center',
-                    padding: 10,
-                    fontFamily: fonts.primary[600]
-                }}>{item.nama_kategori}</Text>
-            </TouchableOpacity>
-        )
-    }
-
-    useEffect(() => {
-        axios.post(apiURL + 'kategori.php').then(res => {
-            setData(res.data);
-        })
-    }, [])
-
+                    // console.log(err[0]);
+                    if (err[0] == 50) {
+                        setTimeout(() => {
+                            setLoading(false);
+                            showMessage({
+                                message: err[1],
+                                type: 'danger',
+                            });
+                        }, 1200);
+                    } else {
+                        setTimeout(() => {
+                            navigation.replace('Login');
+                            showMessage({
+                                message: 'Pendaftaran user berhasil',
+                                type: 'success',
+                            });
+                        }, 1200);
+                    }
+                });
+        }
+    };
     return (
         <ImageBackground
             source={require('../../assets/back.png')}
             style={{
                 flex: 1,
+                padding: 10,
             }}>
-            <View style={{
-                height: windowHeight / 10,
-                backgroundColor: colors.primary,
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 5,
-            }}>
-                <Image
-                    source={require('../../assets/top.png')}
-                    style={
-                        {
-                            width: 150,
-                            height: 60,
 
-                        }
+            {/* <Switch onValueChange={toggleSwitch} value={isEnabled} /> */}
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.page}>
+
+
+
+
+
+
+                <MyGap jarak={10} />
+                <MyInput
+                    placeholder="Masukan Username"
+                    label="Username"
+                    iconname="at"
+                    value={data.username}
+                    onChangeText={value =>
+                        setData({
+                            ...data,
+                            username: value,
+                        })
                     }
                 />
-            </View>
 
-            <FlatList numColumns={2} data={data} renderItem={__renderItem} />
+                <MyGap jarak={10} />
+                <MyInput
+                    placeholder="Masukan nama lengkap"
+                    label="Nama Lengkap"
+                    iconname="person"
+                    value={data.nama_lengkap}
+                    onChangeText={value =>
+                        setData({
+                            ...data,
+                            nama_lengkap: value,
+                        })
+                    }
+                />
+
+                <MyGap jarak={10} />
+                <MyInput
+                    placeholder="Masukan nomor telepon"
+                    label="Telepon"
+                    iconname="call"
+                    keyboardType="phone-pad"
+                    value={data.telepon}
+                    onChangeText={value =>
+                        setData({
+                            ...data,
+                            telepon: value,
+                        })
+                    }
+                />
+
+                <MyGap jarak={10} />
+                <MyInput
+
+                    label="Alamat"
+                    iconname="map"
+                    placeholder="Masukan alamat lengkap"
+                    value={data.alamat}
+                    onChangeText={value =>
+                        setData({
+                            ...data,
+                            alamat: value,
+                        })
+                    }
+                />
+
+
+                <MyGap jarak={10} />
+                <MyInput
+                    placeholder="Masukan password"
+                    label="Password"
+                    iconname="key"
+                    secureTextEntry
+                    value={data.password}
+                    onChangeText={value =>
+                        setData({
+                            ...data,
+                            password: value,
+                        })
+                    }
+                />
+                <MyGap jarak={20} />
+                {!loading &&
+                    <MyButton
+
+                        warna={colors.primary}
+                        title="DAFTAR"
+                        Icons="log-in"
+                        onPress={simpan}
+                    />
+                }
+                <MyGap jarak={20} />
+
+                {loading && <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <ActivityIndicator color={colors.primary} size="large" />
+                </View>}
+            </ScrollView>
+
         </ImageBackground>
     );
 }

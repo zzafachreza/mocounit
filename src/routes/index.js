@@ -10,6 +10,7 @@ import {
   SPenyakit,
   STentang,
   SHasil,
+  SInput,
 } from '../pages';
 import { colors } from '../utils';
 
@@ -30,6 +31,20 @@ export default function Router() {
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{
+          headerShown: false,
+          // headerTitle: 'Detail',
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTintColor: '#fff',
+        }}
+      />
+
+
+      <Stack.Screen
+        name="SInput"
+        component={SInput}
         options={{
           headerShown: false,
           // headerTitle: 'Detail',
