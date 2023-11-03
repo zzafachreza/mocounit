@@ -36,7 +36,8 @@ export default function STentang({ navigation }) {
                 }}><Text style={{
                     fontFamily: fonts.primary[600],
                     color: colors.white,
-                    fontSize: windowWidth / 15
+                    fontSize: windowWidth / 15,
+                    textAlign: 'center'
                 }}>Terima kasih</Text></View>
 
 

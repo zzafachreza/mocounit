@@ -147,18 +147,21 @@ export default function ({ navigation, route }) {
                     </View>
 
 
-                    <MyGap jarak={5} />
-                    <MyInput label="Kendala Breakdown" onChangeText={val => setKirim({
-                        ...kirim,
-                        kendala: val
-                    })} placeholder="Di isi apabila Unit terkendala Breakdown" />
+                    {isEnabled && <View>
+                        <MyGap jarak={5} />
+                        <MyInput label="Kendala Breakdown" onChangeText={val => setKirim({
+                            ...kirim,
+                            kendala: val
+                        })} placeholder="Di isi apabila Unit terkendala Breakdown" />
 
-
+                    </View>}
                     <MyGap jarak={5} />
                     <MyInput label="Estimasi Pengerjaan" onChangeText={val => setKirim({
                         ...kirim,
                         estimasi: val
                     })} placeholder="masukan estimasi" />
+
+
 
 
                     <Text style={{

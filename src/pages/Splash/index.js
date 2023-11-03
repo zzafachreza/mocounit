@@ -129,7 +129,7 @@ export default function Splash({ navigation }) {
           fontSize: windowWidth / 25,
           marginBottom: 20,
           textAlign: 'center',
-        }}>Moco Unit Port Teluk Timbau</Text>
+        }}>Monitoring Control Unit</Text>
       </View>
 
     </ImageBackground >
